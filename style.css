@@ -230,7 +230,7 @@ button:active {
 .day {
   padding: 14px 18px;
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr 65px 90px;
   align-items: center;
   gap: 16px;
   background-color: #161616;
@@ -256,13 +256,13 @@ button:active {
   font-weight: 600;
   color: #c8f0a0;
   white-space: nowrap;
+  text-align: right;
 }
 
 .day p:nth-child(3) {
   font-size: 11px;
   color: rgba(240, 240, 240, 0.38);
   text-align: right;
-  max-width: 80px;
   line-height: 1.4;
 }
 
