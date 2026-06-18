@@ -15,7 +15,7 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: #0d0d0d;
   color: #f0f0f0;
-  transition: background 1s ease;
+  transition: background 0.5s ease, color 0.3s ease;
 }
 
 body.sunny {
@@ -40,6 +40,9 @@ body.rainy {
 
 header {
   padding: 0 4px 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 h1 {
@@ -56,6 +59,13 @@ h1 {
   gap: 6px;
 }
 
+.search-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
 input,
 select {
   width: 100%;
@@ -70,6 +80,10 @@ select {
   appearance: none;
   -webkit-appearance: none;
   transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+input {
+  padding-right: 110px;
 }
 
 select {
@@ -100,27 +114,76 @@ input::placeholder {
   color: rgba(240, 240, 240, 0.38);
 }
 
-button {
-  padding: 13px 16px;
+#searchBtn {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%) scale(1);
+  padding: 9px 16px;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   color: #0d1f00;
   background-color: #c8f0a0;
   border: none;
-  border-radius: 10px;
+  border-radius: 7px;
   cursor: pointer;
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
-button:hover {
+#searchBtn:hover {
   opacity: 0.85;
 }
 
-button:active {
-  transform: scale(0.98);
+#searchBtn:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+.suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background-color: rgba(22, 22, 22, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  z-index: 100;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: itemFadeUp 0.2s ease both;
+}
+
+.suggestions:empty {
+  display: none;
+  border: none;
+  box-shadow: none;
+}
+
+.suggestions li {
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #f0f0f0;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.suggestions li:hover,
+.suggestions li.suggestion-active {
+  background-color: rgba(200, 240, 160, 0.15);
+  color: #c8f0a0;
+  outline: none;
+}
+
+.suggestions li.suggestion-active {
+  background-color: rgba(200, 240, 160, 0.25);
 }
 
 .error {
@@ -218,7 +281,7 @@ button:active {
 }
 
 #forecast:not(:empty)::before {
-  content: 'FORECAST';
+  content: attr(data-title);
   display: block;
   padding: 6px 4px 2px;
   font-size: 10px;
@@ -230,7 +293,7 @@ button:active {
 .day {
   padding: 14px 18px;
   display: grid;
-  grid-template-columns: 1fr 65px 90px;
+  grid-template-columns: 115px 65px 1fr;
   align-items: center;
   gap: 16px;
   background-color: #161616;
@@ -249,6 +312,8 @@ button:active {
   font-size: 12px;
   color: rgba(240, 240, 240, 0.38);
   letter-spacing: 0.5px;
+  text-align: left;
+  text-transform: capitalize;
 }
 
 .day p:nth-child(2) {
@@ -256,13 +321,13 @@ button:active {
   font-weight: 600;
   color: #c8f0a0;
   white-space: nowrap;
-  text-align: right;
+  text-align: left;
 }
 
 .day p:nth-child(3) {
   font-size: 11px;
   color: rgba(240, 240, 240, 0.38);
-  text-align: right;
+  text-align: left;
   line-height: 1.4;
 }
 
@@ -292,4 +357,213 @@ button:active {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.theme-toggle {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: #f0f0f0;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s, border-color 0.25s;
+  width: 34px;
+  height: 34px;
+}
+
+.theme-toggle:hover {
+  background: #1f1f1f;
+  border-color: rgba(255, 255, 255, 0.13);
+}
+
+body.light-theme .sun-icon {
+  display: none;
+}
+
+body:not(.light-theme) .moon-icon {
+  display: none;
+}
+
+body.light-theme {
+  background-color: #f5f5f5;
+  color: #1a1a1a;
+}
+
+body.light-theme.sunny {
+  background: radial-gradient(ellipse 80% 50% at 85% 0%, #fff4d0 0%, transparent 60%), #f5f5f5;
+}
+
+body.light-theme.cloudy {
+  background: radial-gradient(ellipse 100% 50% at 50% 0%, #e2ecf8 0%, transparent 60%), #f5f5f5;
+}
+
+body.light-theme.rainy {
+  background: radial-gradient(ellipse 80% 60% at 30% 0%, #d2e0f0 0%, transparent 60%), #f5f5f5;
+}
+
+.lang-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background-color: rgba(22, 22, 22, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  z-index: 110;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  display: none;
+}
+
+.lang-menu.open {
+  display: block;
+}
+
+.lang-menu li {
+  padding: 10px 18px;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(240, 240, 240, 0.6);
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+  display: flex;
+  gap: 8px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.lang-menu li:hover {
+  background-color: rgba(200, 240, 160, 0.15);
+  color: #c8f0a0;
+}
+
+body.light-theme .lang-menu {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .lang-menu li {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+body.light-theme .lang-menu li:hover {
+  background-color: rgba(118, 184, 61, 0.1);
+  color: #76b83d;
+}
+
+body.light-theme .theme-toggle {
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #1a1a1a;
+}
+
+body.light-theme .theme-toggle:hover {
+  background: #eaeaea;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme input,
+body.light-theme select {
+  color: #1a1a1a;
+  background-color: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(0,0,0,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+body.light-theme input:hover,
+body.light-theme select:hover {
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme input:focus,
+body.light-theme select:focus {
+  background-color: #f9f9f9;
+  border-color: rgba(100, 160, 60, 0.5);
+}
+
+body.light-theme input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+body.light-theme select option {
+  background-color: #ffffff;
+  color: #1a1a1a;
+}
+
+body.light-theme #searchBtn {
+  color: #ffffff;
+  background-color: #76b83d;
+}
+
+body.light-theme .current,
+body.light-theme .day {
+  background-color: #ffffff;
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .day:hover {
+  background-color: #fcfcfc;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+body.light-theme h1,
+body.light-theme #condition,
+body.light-theme #wind,
+body.light-theme #forecast:not(:empty)::before,
+body.light-theme .day p:first-child,
+body.light-theme .day p:nth-child(3) {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+body.light-theme #temp,
+body.light-theme .day p:nth-child(2) {
+  color: #76b83d;
+}
+
+body.light-theme .suggestions {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .suggestions li {
+  color: #1a1a1a;
+}
+
+body.light-theme .suggestions li:hover,
+body.light-theme .suggestions li.suggestion-active {
+  background-color: rgba(118, 184, 61, 0.1);
+  color: #76b83d;
+}
+
+body.light-theme .suggestions li.suggestion-active {
+  background-color: rgba(118, 184, 61, 0.2);
+}
+
+.suggestions::-webkit-scrollbar {
+  width: 5px;
+}
+
+.suggestions::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+body.light-theme .suggestions::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
 }
