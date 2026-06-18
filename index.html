@@ -5,7 +5,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Weather App</title>
-
   <link rel="stylesheet" href="style.css" />
   <script src="script.js" defer></script>
 </head>
@@ -15,7 +14,35 @@
   <div class="app">
 
     <header>
-      <h1>Weather</h1>
+      <h1 id="appTitle">Weather</h1>
+      <div style="display: flex; gap: 8px; align-items: center;">
+
+        <div class="lang-dropdown">
+          <button id="langBtn" class="theme-toggle"
+            style="font-size: 11px; font-weight: 700; border-radius: 10px; width: auto; padding: 0 12px; gap: 6px;">🇬🇧
+            EN</button>
+          <ul id="langMenu" class="lang-menu">
+            <li data-lang="en">🇬🇧 EN</li>
+            <li data-lang="uk">🇺🇦 UK</li>
+            <li data-lang="de">🇩🇪 DE</li>
+            <li data-lang="fr">🇫🇷 FR</li>
+          </ul>
+        </div>
+
+        <button id="ThemeChange" class="theme-toggle" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path
+              d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41">
+            </path>
+          </svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        </button>
+      </div>
     </header>
 
     <div class="controls">
@@ -28,8 +55,11 @@
         <option value="Paris">Paris</option>
       </select>
 
-      <input id="searchInput" type="text" placeholder="Search city..." />
-      <button id="searchBtn">Search</button>
+      <div class="search-wrapper">
+        <input id="searchInput" type="text" placeholder="Search city..." autocomplete="off" />
+        <button id="searchBtn">Search</button>
+        <ul id="suggestions" class="suggestions"></ul>
+      </div>
 
     </div>
 
@@ -42,7 +72,7 @@
       <p id="wind">—</p>
     </div>
 
-    <div id="forecast"></div>
+    <div id="forecast" data-title="FORECAST"></div>
 
   </div>
 
